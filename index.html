@@ -1,15 +1,250 @@
 ﻿<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>My Simple Website</title>
-    <style>
-      body { font-family: sans-serif; margin: 40px; }
-      h1 { color: #3366cc; }
-    </style>
-  </head>
-  <body>
-    <h1>Hello!</h1>
-    <p>This is my free website with no server required 🚀</p>
-  </body>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>4-Digit Code Input</title>
+<style>
+  :root{
+    --size: 3.2rem;
+    --gap: .6rem;
+    --bg: #f6f8fb;
+    --accent: #2563eb;
+    --border: #d1d5db;
+    --radius: .5rem;
+    --shadow: 0 6px 18px rgba(37,99,235,0.06);
+  }
+
+  body{
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    margin:0;
+    background:linear-gradient(180deg,#ffffff,#f3f6fb);
+  }
+
+  .container{
+    background:var(--bg);
+    padding:28px;
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    text-align:center;
+    width: min(420px, 92%);
+  }
+
+  h1{ font-size:1.1rem; margin:0 0 10px; }
+  p{ color:#374151; margin:0 0 18px; font-size:.95rem; }
+
+  form.code-form{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:var(--gap);
+    margin-bottom:14px;
+  }
+
+  input.code{
+    width:var(--size);
+    height:var(--size);
+    text-align:center;
+    font-size:1.2rem;
+    border-radius:var(--radius);
+    border:1px solid var(--border);
+    outline:none;
+    background:white;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+    caret-color: transparent; /* hide caret */
+  }
+
+  input.code:focus{
+    border-color:var(--accent);
+    box-shadow: 0 0 0 4px rgba(37,99,235,0.06);
+  }
+
+  .actions{
+    display:flex;
+    gap:.6rem;
+    justify-content:center;
+  }
+
+  button{
+    padding:.55rem .9rem;
+    border-radius:8px;
+    border:0;
+    background:var(--accent);
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+  }
+
+  button.secondary{
+    background: transparent;
+    color:var(--accent);
+    border:1px solid var(--border);
+  }
+
+  .sr-only{
+    position:absolute !important;
+    height:1px;width:1px;
+    overflow:hidden;
+    clip:rect(1px,1px,1px,1px);
+    white-space:nowrap;
+  }
+
+  .msg{
+    font-size:.9rem;
+    color:#065f46;
+    min-height:1.1rem;
+    margin-top:8px;
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="region" aria-label="4 digit code entry">
+    <h1>Enter your 4-digit code</h1>
+    <p>Type the 4 numbers. You can paste all 4 digits at once (e.g. from your clipboard).</p>
+
+    <form id="codeForm" class="code-form" autocomplete="off" onsubmit="return false;">
+      <!-- Each input accepts a single digit. Use inputmode to show numeric keyboard on mobile. -->
+      <label class="sr-only" for="d1">Digit 1</label>
+      <input id="d1" class="code" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" />
+      <label class="sr-only" for="d2">Digit 2</label>
+      <input id="d2" class="code" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" />
+      <label class="sr-only" for="d3">Digit 3</label>
+      <input id="d3" class="code" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" />
+      <label class="sr-only" for="d4">Digit 4</label>
+      <input id="d4" class="code" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" />
+    </form>
+
+    <div class="actions">
+      <button id="submitBtn">Verify</button>
+      <button id="clearBtn" type="button" class="secondary">Clear</button>
+    </div>
+
+    <div id="message" class="msg" aria-live="polite"></div>
+  </div>
+
+<script>
+  (function(){
+    const inputs = Array.from(document.querySelectorAll('input.code'));
+    const message = document.getElementById('message');
+    const submitBtn = document.getElementById('submitBtn');
+    const clearBtn = document.getElementById('clearBtn');
+
+    // Focus the first input on load
+    inputs[0].focus();
+
+    // Helper: get code string
+    function getCode(){ return inputs.map(i => i.value).join(''); }
+
+    // Move focus to next input
+    function focusNext(index){
+      if(index < inputs.length - 1) inputs[index + 1].focus();
+    }
+
+    // Move focus to previous input
+    function focusPrev(index){
+      if(index > 0) inputs[index - 1].focus();
+    }
+
+    // Handle input events
+    inputs.forEach((input, idx) => {
+      input.addEventListener('input', (e) => {
+        const val = input.value;
+        // keep only digits
+        const digit = val.replace(/\D/g, '').slice(0,1);
+        input.value = digit;
+        if(digit) focusNext(idx);
+
+        // If all filled, optionally auto-submit or show code
+        if(getCode().length === inputs.length){
+          message.textContent = ''; // clear old messages
+          // (don't auto-submit here by default; user can click Verify)
+        }
+      });
+
+      input.addEventListener('keydown', (e) => {
+        // Backspace on empty field -> move back
+        if(e.key === 'Backspace' && !input.value){
+          e.preventDefault();
+          focusPrev(idx);
+          const prev = inputs[idx-1];
+          if(prev) prev.value = '';
+        }
+
+        // Left / Right arrow navigation
+        if(e.key === 'ArrowLeft') { e.preventDefault(); focusPrev(idx); }
+        if(e.key === 'ArrowRight') { e.preventDefault(); focusNext(idx); }
+      });
+
+      // Allow paste of full code into any field
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const paste = (e.clipboardData || window.clipboardData).getData('text');
+        const digits = paste.replace(/\D/g, '').slice(0, inputs.length);
+        if(!digits) return;
+        for(let i=0; i<digits.length; i++){
+          inputs[i].value = digits[i];
+        }
+        // focus next empty (or last)
+        const firstEmpty = inputs.findIndex(i => !i.value);
+        if(firstEmpty === -1) inputs[inputs.length-1].focus();
+        else inputs[firstEmpty].focus();
+      });
+
+      // Prevent non-digit key presses (for non-keyboard numeric input)
+      input.addEventListener('keypress', (e) => {
+        if(!/\d/.test(e.key)) e.preventDefault();
+      });
+    });
+
+    // Submit button: validate and "send"
+    submitBtn.addEventListener('click', () => {
+      const code = getCode();
+      if(code.length < inputs.length){
+        message.style.color = '#dc2626'; // red
+        message.textContent = 'Please enter all 4 digits.';
+        // focus first empty
+        const firstEmpty = inputs.find(i => !i.value);
+        if(firstEmpty) firstEmpty.focus();
+        return;
+      }
+
+      // Example: pretend to verify the code
+      message.style.color = '#065f46'; // green
+      message.textContent = 'Verifying...';
+
+      // Simulate verification delay (replace with real call if needed)
+      setTimeout(() => {
+        // Example: treat '1234' as correct for demo
+        if(code === '1234'){
+          message.style.color = '#065f46';
+          message.textContent = 'Code accepted — success!';
+        } else {
+          message.style.color = '#b91c1c';
+          message.textContent = 'Invalid code. Try again.';
+          // clear inputs for retry
+          inputs.forEach(i => i.value = '');
+          inputs[0].focus();
+        }
+      }, 600);
+    });
+
+    // Clear button
+    clearBtn.addEventListener('click', () => {
+      inputs.forEach(i => i.value = '');
+      message.textContent = '';
+      inputs[0].focus();
+    });
+
+    // Optional: allow Enter to submit when focused on last input
+    inputs[inputs.length-1].addEventListener('keydown', (e) => {
+      if(e.key === 'Enter') submitBtn.click();
+    });
+
+  })();
+</script>
+</body>
 </html>
