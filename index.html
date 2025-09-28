@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>4-Digit Code Input</title>
+<title>Enter a 4 Digit Code</title>
 <style>
   :root{
     --size: 3.2rem;
@@ -22,7 +22,7 @@
     justify-content:center;
     min-height:100vh;
     margin:0;
-    background:linear-gradient(180deg,#ffffff,#f3f6fb);
+    background:linear-gradient(180deg,#0a0404,#420404);
   }
 
   .container{
@@ -103,8 +103,8 @@
 </head>
 <body>
   <div class="container" role="region" aria-label="4 digit code entry">
-    <h1>Enter your 4-digit code</h1>
-    <p>Type the 4 numbers. You can paste all 4 digits at once (e.g. from your clipboard).</p>
+    <h1>Enter a 4-digit code</h1>
+    <p>Type the 4 numbers.</p>
 
     <form id="codeForm" class="code-form" autocomplete="off" onsubmit="return false;">
       <!-- Each input accepts a single digit. Use inputmode to show numeric keyboard on mobile. -->
@@ -248,3 +248,4 @@
 </script>
 </body>
 </html>
+
