@@ -3,41 +3,93 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Enter a 4 Digit Code</title>
+<title>Enter 4-Digit Code</title>
 <style>
   :root{
-    --size: 3.2rem;
-    --gap: .6rem;
-    --bg: #f6f8fb;
-    --accent: #2563eb;
-    --border: #d1d5db;
-    --radius: .5rem;
-    --shadow: 0 6px 18px rgba(37,99,235,0.06);
+    --size:3.6rem;
+    --gap:.7rem;
+    --bg-dark:#050505;
+    --panel:#0b0b0b;
+    --red-1:#7a0303;
+    --red-2:#e11d1d;
+    --muted:#8b8b8b;
+    --glass: rgba(255,255,255,0.03);
+    --radius:12px;
+    --shadow: 0 10px 30px rgba(0,0,0,0.7);
   }
 
+  /* page background: subtle gradient + scanline noise */
+  html,body{height:100%}
   body{
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    margin:0;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, monospace;
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(200,0,0,0.03), transparent 6%),
+                linear-gradient(180deg,#000 0%, #080202 60%, #050505 100%);
+    color:#f7f7f7;
     display:flex;
     align-items:center;
     justify-content:center;
     min-height:100vh;
-    margin:0;
-    background:linear-gradient(180deg,#0a0404,#420404);
+    overflow:hidden;
+  }
+
+  /* scanline overlay */
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image: repeating-linear-gradient(transparent 0 2px, rgba(0,0,0,0.25) 2px 3px);
+    mix-blend-mode: overlay;
+    pointer-events:none;
+    opacity:.12;
   }
 
   .container{
-    background:var(--bg);
+    width: min(520px,94%);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:var(--radius);
     padding:28px;
-    border-radius:14px;
-    box-shadow:var(--shadow);
-    text-align:center;
-    width: min(420px, 92%);
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255,0,0,0.06);
+    position:relative;
+    overflow:hidden;
   }
 
-  h1{ font-size:1.1rem; margin:0 0 10px; }
-  p{ color:#374151; margin:0 0 18px; font-size:.95rem; }
+  /* faint red fog at top/bottom for atmosphere */
+  .container::before, .container::after{
+    content:"";
+    position:absolute;
+    left: -20%;
+    right: -20%;
+    height:40%;
+    pointer-events:none;
+    transform: rotate(-4deg);
+  }
+  .container::before{
+    top:-10%;
+    background: radial-gradient(60% 60% at 10% 10%, rgba(225,29,29,0.06), transparent 30%);
+  }
+  .container::after{
+    bottom:-18%;
+    background: radial-gradient(60% 60% at 90% 90%, rgba(122,3,3,0.04), transparent 30%);
+  }
 
-  form.code-form{
+  h1{
+    margin:0 0 8px;
+    font-size:1.1rem;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--red-2);
+    text-shadow: 0 2px 10px rgba(225,29,29,0.12);
+  }
+
+  p{
+    margin:0 0 18px;
+    color:var(--muted);
+    font-size:.95rem;
+  }
+
+  .code-form{
     display:flex;
     align-items:center;
     justify-content:center;
@@ -48,205 +100,223 @@
   input.code{
     width:var(--size);
     height:var(--size);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
     text-align:center;
-    font-size:1.2rem;
-    border-radius:var(--radius);
-    border:1px solid var(--border);
+    font-size:1.45rem;
+    font-weight:700;
+    letter-spacing:4px;
+    color:#fff;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));
+    border-radius:10px;
+    border: 1px solid rgba(255,255,255,0.04);
     outline:none;
-    background:white;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.02);
-    caret-color: transparent; /* hide caret */
+    box-shadow: 0 6px 18px rgba(0,0,0,0.7), inset 0 -4px 18px rgba(0,0,0,0.6);
+    caret-color: transparent;
+    transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    position:relative;
   }
 
+  /* red glow & subtle flicker on focus */
   input.code:focus{
-    border-color:var(--accent);
-    box-shadow: 0 0 0 4px rgba(37,99,235,0.06);
+    transform: translateY(-3px);
+    border-color: var(--red-2);
+    box-shadow:
+      0 8px 28px rgba(0,0,0,0.7),
+      0 0 18px rgba(225,29,29,0.18),
+      inset 0 0 10px rgba(225,29,29,0.03);
   }
 
+  /* creepy digit style using text-shadow for depth */
+  input.code::selection{ background: rgba(225,29,29,0.25); color:#fff; }
+  input.code::-webkit-input-placeholder{ color: rgba(255,255,255,0.12); }
+
+  /* actions */
   .actions{
     display:flex;
     gap:.6rem;
     justify-content:center;
+    margin-top:8px;
   }
 
   button{
-    padding:.55rem .9rem;
+    padding:.5rem .85rem;
     border-radius:8px;
-    border:0;
-    background:var(--accent);
-    color:#0f0202;
-    font-weight:600;
+    border:1px solid rgba(255,255,255,0.04);
+    background: linear-gradient(180deg, rgba(255,0,0,0.08), rgba(0,0,0,0.55));
+    color:var(--red-2);
+    font-weight:700;
+    letter-spacing:.6px;
     cursor:pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+    transition: transform .12s ease, box-shadow .12s ease;
   }
+
+  button:hover{ transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,0.7); }
 
   button.secondary{
-    background: transparent;
-    color:var(--accent);
-    border:1px solid var(--border);
-  }
-
-  .sr-only{
-    position:absolute !important;
-    height:1px;width:1px;
-    overflow:hidden;
-    clip:rect(1px,1px,1px,1px);
-    white-space:nowrap;
+    background:transparent;
+    color:var(--muted);
+    border:1px dashed rgba(255,255,255,0.04);
   }
 
   .msg{
-    font-size:.9rem;
-    color:#065f46;
-    min-height:1.1rem;
-    margin-top:8px;
+    font-size:.95rem;
+    min-height:1.2rem;
+    margin-top:12px;
+    letter-spacing:.4px;
   }
+
+  /* red bad / pale red good states */
+  .msg.error{ color: #ff6b6b; }
+  .msg.ok{ color: #ffb3b3; text-shadow: 0 2px 8px rgba(255,0,0,0.06); font-weight:700; }
+
+  /* subtle animation: heartbeat for accepted text */
+  @keyframes heartbeat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.03); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+  .msg.ok.heartbeat{ animation: heartbeat 900ms ease-in-out 1; }
+
+  /* small responsiveness */
+  @media (max-width:420px){
+    :root{ --size:3rem; }
+  }
+
+  /* accessibility: focus ring for keyboard users */
+  input.code:focus-visible{ outline: 3px solid rgba(225,29,29,0.12); outline-offset: 4px; }
 </style>
 </head>
 <body>
-  <div class="container" role="region" aria-label="4 digit code entry">
-    <h1>Enter a 4-digit code</h1>
-    <p>Type the 4 numbers.</p>
+  <div class="container" role="region" aria-label="Four digit code entry">
+    <h1>ENTER THE CODE</h1>
+    <p>Type the 4 numbers. Paste like <code>1234</code> is supported — mobile shows numeric keyboard.</p>
 
     <form id="codeForm" class="code-form" autocomplete="off" onsubmit="return false;">
-      <!-- Each input accepts a single digit. Use inputmode to show numeric keyboard on mobile. -->
       <label class="sr-only" for="d1">Digit 1</label>
-      <input id="d1" class="code" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" />
+      <input id="d1" class="code" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" aria-label="Digit 1" />
       <label class="sr-only" for="d2">Digit 2</label>
-      <input id="d2" class="code" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" />
+      <input id="d2" class="code" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" aria-label="Digit 2" />
       <label class="sr-only" for="d3">Digit 3</label>
-      <input id="d3" class="code" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" />
+      <input id="d3" class="code" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" aria-label="Digit 3" />
       <label class="sr-only" for="d4">Digit 4</label>
-      <input id="d4" class="code" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" />
+      <input id="d4" class="code" inputmode="numeric" pattern="\d*" maxlength="1" autocomplete="off" aria-label="Digit 4" />
     </form>
 
     <div class="actions">
-      <button id="submitBtn">Verify</button>
-      <button id="clearBtn" type="button" class="secondary">Clear</button>
+      <button id="submitBtn" type="button">VERIFY</button>
+      <button id="clearBtn" type="button" class="secondary">CLEAR</button>
     </div>
 
     <div id="message" class="msg" aria-live="polite"></div>
   </div>
 
 <script>
-  (function(){
-    const inputs = Array.from(document.querySelectorAll('input.code'));
-    const message = document.getElementById('message');
-    const submitBtn = document.getElementById('submitBtn');
-    const clearBtn = document.getElementById('clearBtn');
+(function(){
+  const inputs = Array.from(document.querySelectorAll('input.code'));
+  const message = document.getElementById('message');
+  const submitBtn = document.getElementById('submitBtn');
+  const clearBtn = document.getElementById('clearBtn');
 
-    // Focus the first input on load
-    inputs[0].focus();
+  // focus first
+  inputs[0].focus();
 
-    // Helper: get code string
-    function getCode(){ return inputs.map(i => i.value).join(''); }
+  function getCode(){ return inputs.map(i => i.value).join(''); }
+  function focusNext(i){ if(i < inputs.length - 1) inputs[i+1].focus(); }
+  function focusPrev(i){ if(i > 0) inputs[i-1].focus(); }
 
-    // Move focus to next input
-    function focusNext(index){
-      if(index < inputs.length - 1) inputs[index + 1].focus();
-    }
-
-    // Move focus to previous input
-    function focusPrev(index){
-      if(index > 0) inputs[index - 1].focus();
-    }
-
-    // Handle input events
-    inputs.forEach((input, idx) => {
-      input.addEventListener('input', (e) => {
-        const val = input.value;
-        // keep only digits
-        const digit = val.replace(/\D/g, '').slice(0,1);
-        input.value = digit;
-        if(digit) focusNext(idx);
-
-        // If all filled, optionally auto-submit or show code
-        if(getCode().length === inputs.length){
-          message.textContent = ''; // clear old messages
-          // (don't auto-submit here by default; user can click Verify)
-        }
-      });
-
-      input.addEventListener('keydown', (e) => {
-        // Backspace on empty field -> move back
-        if(e.key === 'Backspace' && !input.value){
-          e.preventDefault();
-          focusPrev(idx);
-          const prev = inputs[idx-1];
-          if(prev) prev.value = '';
-        }
-
-        // Left / Right arrow navigation
-        if(e.key === 'ArrowLeft') { e.preventDefault(); focusPrev(idx); }
-        if(e.key === 'ArrowRight') { e.preventDefault(); focusNext(idx); }
-      });
-
-      // Allow paste of full code into any field
-      input.addEventListener('paste', (e) => {
-        e.preventDefault();
-        const paste = (e.clipboardData || window.clipboardData).getData('text');
-        const digits = paste.replace(/\D/g, '').slice(0, inputs.length);
-        if(!digits) return;
-        for(let i=0; i<digits.length; i++){
-          inputs[i].value = digits[i];
-        }
-        // focus next empty (or last)
-        const firstEmpty = inputs.findIndex(i => !i.value);
-        if(firstEmpty === -1) inputs[inputs.length-1].focus();
-        else inputs[firstEmpty].focus();
-      });
-
-      // Prevent non-digit key presses (for non-keyboard numeric input)
-      input.addEventListener('keypress', (e) => {
-        if(!/\d/.test(e.key)) e.preventDefault();
-      });
+  inputs.forEach((input, idx) => {
+    input.addEventListener('input', (e) => {
+      const digit = input.value.replace(/\D/g, '').slice(0,1);
+      input.value = digit;
+      if(digit) focusNext(idx);
+      // clear message when typing
+      message.textContent = '';
+      message.className = 'msg';
     });
 
-    // Submit button: validate and "send"
-    submitBtn.addEventListener('click', () => {
-      const code = getCode();
-      if(code.length < inputs.length){
-        message.style.color = '#dc2626'; // red
-        message.textContent = 'Please enter all 4 digits.';
-        // focus first empty
-        const firstEmpty = inputs.find(i => !i.value);
-        if(firstEmpty) firstEmpty.focus();
-        return;
+    input.addEventListener('keydown', (e) => {
+      if(e.key === 'Backspace' && !input.value){
+        e.preventDefault();
+        focusPrev(idx);
+        const prev = inputs[idx-1];
+        if(prev) prev.value = '';
       }
+      if(e.key === 'ArrowLeft'){ e.preventDefault(); focusPrev(idx); }
+      if(e.key === 'ArrowRight'){ e.preventDefault(); focusNext(idx); }
+    });
 
-      // Example: pretend to verify the code
-      message.style.color = '#065f46'; // green
-      message.textContent = 'Verifying...';
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const paste = (e.clipboardData || window.clipboardData).getData('text') || '';
+      const digits = paste.replace(/\D/g, '').slice(0, inputs.length);
+      if(!digits) return;
+      for(let i=0;i<digits.length;i++){
+        inputs[i].value = digits[i];
+      }
+      const firstEmpty = inputs.findIndex(i => !i.value);
+      if(firstEmpty === -1) inputs[inputs.length-1].focus();
+      else inputs[firstEmpty].focus();
+      message.textContent = '';
+      message.className = 'msg';
+    });
 
-      // Simulate verification delay (replace with real call if needed)
-      setTimeout(() => {
-        // Example: treat '1234' as correct for demo
-        if(code === '1234'){
-          message.style.color = '#065f46';
-          message.textContent = 'Code accepted — success!';
-        } else {
-          message.style.color = '#b91c1c';
-          message.textContent = 'Invalid code. Try again.';
-          // clear inputs for retry
+    input.addEventListener('keypress', (e) => {
+      if(!/\d/.test(e.key)) e.preventDefault();
+    });
+  });
+
+  submitBtn.addEventListener('click', () => {
+    const code = getCode();
+    if(code.length < inputs.length){
+      message.textContent = 'Enter all 4 digits.';
+      message.className = 'msg error';
+      const firstEmpty = inputs.find(i => !i.value);
+      if(firstEmpty) firstEmpty.focus();
+      return;
+    }
+
+    // show "verifying..." with creepy delay
+    message.textContent = 'Verifying…';
+    message.className = 'msg';
+    // small dramatic delay
+    setTimeout(() => {
+      // demo: treat '1337' as the correct spooky answer; change as needed
+      if(code === '1337'){
+        message.textContent = 'CODE ACCEPTED';
+        message.className = 'msg ok heartbeat';
+        // keep inputs locked briefly
+        inputs.forEach(i => i.readOnly = true);
+      } else {
+        message.textContent = 'INVALID — TRY AGAIN';
+        message.className = 'msg error';
+        // flash and clear
+        setTimeout(() => {
           inputs.forEach(i => i.value = '');
           inputs[0].focus();
-        }
-      }, 600);
-    });
+        }, 500);
+      }
+    }, 700);
+  });
 
-    // Clear button
-    clearBtn.addEventListener('click', () => {
-      inputs.forEach(i => i.value = '');
-      message.textContent = '';
-      inputs[0].focus();
-    });
+  clearBtn.addEventListener('click', () => {
+    inputs.forEach(i => { i.value = ''; i.readOnly = false; });
+    message.textContent = '';
+    message.className = 'msg';
+    inputs[0].focus();
+  });
 
-    // Optional: allow Enter to submit when focused on last input
-    inputs[inputs.length-1].addEventListener('keydown', (e) => {
-      if(e.key === 'Enter') submitBtn.click();
-    });
+  // allow Enter on last input
+  inputs[inputs.length-1].addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') submitBtn.click();
+  });
 
-  })();
+})();
 </script>
 </body>
 </html>
-
 
