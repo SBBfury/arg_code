@@ -5,408 +5,208 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Retro Creepy 4-Digit Entry</title>
 <style>
-  /* ---------- theme variables ---------- */
   :root{
     --panel-w: 880px;
     --panel-h: 520px;
     --bg-1: #090202;
-    --mag-1: #b20f1a; /* deep blood red accent */
-    --mag-2: #ff4b7a; /* retro pink */
-    --muted: #cfc6c6;
-    --glass: rgba(255,255,255,0.02);
-    --shadow: 0 20px 60px rgba(0,0,0,0.7);
-    --radius: 8px;
-    --toolbar: #e0e0d8;
+    --mag-1: #b20f1a;
+    --mag-2: #ff4b7a;
+    --toolbar: #dcdcdc;
   }
 
-  /* ---------- page ---------- */
   html,body{height:100%}
   body{
     margin:0;
-    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, monospace;
-    background: radial-gradient(circle at 10% 10%, rgba(178,15,26,0.06), transparent 6%),
-                linear-gradient(180deg,#030002 0%, #060303 30%, #0a0202 100%);
+    font-family: "Lucida Console", monospace;
+    background:#000;
     display:flex;
     align-items:center;
     justify-content:center;
-    min-height:100vh;
     color:#fff;
   }
 
-  /* ------- retro window (panel) ------- */
+  /* Window */
   .window {
     width:var(--panel-w);
     max-width:96vw;
     height:var(--panel-h);
     max-height:92vh;
-    border-radius:6px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.15));
-    box-shadow: var(--shadow);
-    border: 1px solid rgba(255,255,255,0.03);
-    position:relative;
-    overflow:hidden;
+    background:#111;
+    box-shadow:0 0 0 2px #666 inset;
     display:flex;
     flex-direction:row;
-    backdrop-filter: blur(0.2px);
+    border:2px solid #222;
   }
 
-  /* ---------- fake old browser toolbar ---------- */
+  /* Toolbar */
   .toolbar{
     position:absolute;
     left:0; right:0; top:0;
-    height:44px;
-    background: linear-gradient(180deg, var(--toolbar), #d6d6c6);
-    border-bottom:1px solid rgba(0,0,0,0.15);
+    height:34px;
+    background: var(--toolbar);
+    border-bottom:2px solid #222;
     display:flex;
     align-items:center;
-    gap:8px;
-    padding:0 12px;
-    box-sizing:border-box;
-    z-index:6;
-    font-size:13px;
+    padding:0 6px;
+    font-size:12px;
     color:#000;
   }
   .toolbar .btn {
-    width:18px;height:18px;border-radius:3px;background:#fff;border:1px solid rgba(0,0,0,0.08);
-    display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:#444;font-size:12px;
-    box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset;
+    width:16px;height:16px;background:#fff;border:1px solid #000;
+    display:flex;align-items:center;justify-content:center;font-size:11px;
+    margin-right:4px;
   }
   .toolbar .address {
-    margin-left:8px;
+    margin-left:6px;
     flex:1;
     background:#fff;
-    height:22px;border-radius:3px;padding:3px 8px;display:flex;align-items:center;gap:8px;font-size:12px;
-    color:#000; box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    height:18px;border:1px solid #000;
+    padding:0 4px;
+    display:flex;align-items:center;
+    font-size:11px;color:#000;
   }
-  .toolbar .address .url{ color:#083; font-weight:700; letter-spacing:.5px; font-family:monospace; font-size:12px; }
 
-  /* ---------- left wallpaper (hearts) ---------- */
+  /* Left side (hearts bg) */
   .left {
-    width: 62%;
-    padding-top:44px; /* room for toolbar */
+    width: 60%;
+    padding-top:34px;
+    background: repeating-linear-gradient(
+      45deg,
+      #b20f1a,
+      #b20f1a 20px,
+      #ff4b7a 20px,
+      #ff4b7a 40px
+    );
     position:relative;
-    overflow:hidden;
-    display:flex;
-    align-items:center;
-    justify-content:center;
   }
-
-  /* heart wallpaper made with layered radial gradients (pixel-like feel) */
-  .hearts {
-    width:100%;
-    height:100%;
-    background:
-      radial-gradient(circle at 20% 20%, rgba(255,75,122,0.12) 0 6%, transparent 7%),
-      radial-gradient(circle at 70% 35%, rgba(178,15,26,0.07) 0 6%, transparent 7%),
-      radial-gradient(circle at 45% 65%, rgba(255,75,122,0.08) 0 6%, transparent 7%),
-      linear-gradient(135deg, rgba(255,75,122,0.06), rgba(178,15,26,0.03));
-    filter: contrast(0.9) saturate(0.9);
-    position:relative;
-    display:block;
-  }
-
-  /* faux pixel detail overlay for retro look */
-  .hearts::after{
-    content:"";
-    position:absolute; inset:0;
-    background-image:
-      repeating-linear-gradient(transparent 0 3px, rgba(0,0,0,0.08) 3px 4px),
-      repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0 2px, transparent 2px 4px);
-    mix-blend-mode:overlay; opacity:0.12; pointer-events:none;
-  }
-
-  /* left corner thumbnail (retro video / cam placeholder) */
   .left .thumb{
-    position:absolute;
-    left:14px; top:70px;
-    width:160px;height:110px;
-    background:linear-gradient(180deg,#060101,#120405);
-    border:2px solid rgba(255,255,255,0.03);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.7);
-    z-index:4;
+    position:absolute; left:10px; top:50px;
+    width:150px;height:100px;
+    background:#000;
+    border:2px solid #fff;
+    color:#f88;
     display:flex;align-items:center;justify-content:center;
-    font-weight:700;color:#ff8aa0;font-size:12px;
-    transform: rotate(-2deg);
+    font-size:11px;font-weight:bold;
   }
 
-  /* ---------- right chat panel ---------- */
+  /* Right chat panel */
   .right {
-    width:38%;
-    background: linear-gradient(180deg,#f9f7f7 0%, #ffecec 100%);
-    color:#0b0b0b;
-    padding:54px 14px 18px 14px;
+    width:40%;
+    background:#eee;
+    color:#000;
+    padding:40px 8px 8px 8px;
     box-sizing:border-box;
-    position:relative;
     display:flex;
     flex-direction:column;
-    gap:12px;
   }
 
-  /* chat area */
   .chatbox{
-    flex:1 1 auto;
-    overflow:auto;
-    background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(245,235,235,0.4));
-    border-radius:6px;
-    padding:12px;
-    box-shadow: inset 0 2px 6px rgba(0,0,0,0.06);
-    font-family: "Lucida Console", Monaco, monospace;
-    font-size:13px;
-    line-height:1.4;
-    color:#111;
-    border:2px solid rgba(0,0,0,0.05);
-  }
-
-  /* messages */
-  .msg.you{ color:#061; }
-  .msg.them{ color:#4a0622; font-weight:700; }
-  .msg .who{ display:block; font-size:11px; color:#9b0000; margin-bottom:6px; text-transform:uppercase; letter-spacing:1px; }
-
-  /* bottom input area (where the digit boxes sit) */
-  .entry {
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding-top:6px;
-  }
-
-  /* text box for typing (visual only) */
-  .text-field{
     flex:1;
-    height:36px;
     background:#fff;
-    border-radius:6px;
-    border:1px solid rgba(0,0,0,0.08);
-    display:flex;
-    align-items:center;
+    border:2px solid #000;
     padding:6px;
-    gap:8px;
+    font-size:12px;
+    line-height:1.4;
+    overflow:auto;
   }
 
-  /* the four retro digit boxes inside the text-field */
+  .msg.you{ color:#060; }
+  .msg.them{ color:#800; font-weight:bold; }
+  .msg .who{ display:block; font-size:10px; text-transform:uppercase; }
+
+  .entry {
+    margin-top:6px;
+    display:flex;
+    gap:4px;
+  }
+
   .digit {
-    width:42px;height:36px;
-    background:linear-gradient(180deg,#ffdfe5,#ffe2e8);
-    border:2px solid rgba(0,0,0,0.06);
-    font-family: "Courier New", monospace;
-    font-weight:800;
-    font-size:18px;
+    width:36px;height:32px;
+    background:#fff;
+    border:2px solid #000;
     text-align:center;
-    line-height:28px;
-    color:#3b0000;
-    border-radius:4px;
-    box-shadow: inset 0 -3px 8px rgba(0,0,0,0.06);
+    font-family:inherit;font-size:16px;font-weight:bold;
   }
-  input.digit {
-    -webkit-appearance:none; appearance:none;
-    padding:0; margin:0; border:0; background:transparent; width:100%; height:100%;
-    text-align:center; font-family:inherit; font-weight:inherit; font-size:inherit; color:inherit;
-    caret-color: transparent;
-  }
-
   .send-btn{
-    width:56px;height:36px;border-radius:6px;border:0;background:linear-gradient(180deg,var(--mag-1),#7f0000);
-    color:#fff;font-weight:800;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.45);
-    display:flex;align-items:center;justify-content:center;font-size:13px;
+    width:60px;height:34px;
+    background:#800;color:#fff;
+    border:2px solid #000;
+    font-weight:bold;cursor:pointer;
   }
 
-  /* small footer / status */
-  .status {
-    font-size:12px;color:var(--muted); text-align:center;
-    padding-top:6px;
+  .status{
+    font-size:11px;
+    margin-top:4px;
+    color:#444;
+    text-align:center;
   }
 
-  /* ---------- retro visual effects ---------- */
-  .grain {
-    pointer-events:none;
-    position:absolute; inset:0; z-index:8;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"><rect width="8" height="8" fill="rgba(0,0,0,0)"/><circle cx="1" cy="1" r="1" fill="rgba(0,0,0,0.03)"/></svg>');
-    opacity:0.08;
-    mix-blend-mode:overlay;
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-6px)}
+    50%{transform:translateX(6px)}
+    75%{transform:translateX(-4px)}
   }
-
-  /* glitch / shake animation for wrong code */
-  @keyframes shakeX {
-    0%{ transform: translateX(0) }
-    20%{ transform: translateX(-8px) }
-    40%{ transform: translateX(6px) }
-    60%{ transform: translateX(-4px) }
-    80%{ transform: translateX(2px) }
-    100%{ transform: translateX(0) }
-  }
-  .glitch {
-    animation: shakeX .48s ease-in-out;
-    box-shadow: 0 6px 18px rgba(178,15,26,0.2);
-  }
-
-  /* small responsive */
-  @media (max-width:880px){
-    .left{ display:none; }
-    .right{ width:100%; padding-top:56px; }
-    .window{ width:95vw; flex-direction:column; height:86vh; }
-    .toolbar{ position:relative; border-bottom:1px solid rgba(0,0,0,0.06); }
-  }
+  .glitch { animation:shake 0.4s }
 </style>
 </head>
 <body>
-  <div class="window" role="application" aria-label="Creepy retro chat">
-    <div class="toolbar" aria-hidden="true">
-      <div class="btn">←</div>
-      <div class="btn">⊠</div>
-      <div class="address">
-        <span style="opacity:.6">http://</span><span class="url">ourgirlfriendmaria.com/chat/</span>
-      </div>
-      <div style="font-size:12px; color:#333; margin-left:8px;">Welcome Back, <strong style="color:#6b0b0b">chrislike69</strong></div>
-    </div>
-
-    <div class="left" aria-hidden="true">
-      <div class="hearts" role="img" aria-label="hearts wallpaper"></div>
-      <div class="thumb">LIVE CAM</div>
-      <div class="grain"></div>
-    </div>
-
-    <div class="right" role="region" aria-label="Chat panel">
-      <div class="chatbox" id="chatbox" aria-live="polite">
-        <!-- sample conversation to match retro screenshot style -->
-        <div class="msg them"><span class="who">MARIA:</span> These questions make me uncomfortable, Chris.</div>
-        <div class="msg you"><span class="who">YOU:</span> answer me</div>
-        <div class="msg them"><span class="who">MARIA:</span> I am not enjoying this conversation, Chris.</div>
-        <div class="msg you"><span class="who">YOU:</span> are you talking to other men?</div>
-        <div class="msg them"><span class="who">MARIA:</span> We're done. I have to go.</div>
-      </div>
-
-      <div class="entry" aria-hidden="false">
-        <div class="text-field" role="group" aria-label="Enter four digit code">
-          <!-- four boxes visually inside a text field -->
-          <div class="digit"><input id="d1" class="digit" inputmode="numeric" maxlength="1" autocomplete="off"></div>
-          <div class="digit"><input id="d2" class="digit" inputmode="numeric" maxlength="1" autocomplete="off"></div>
-          <div class="digit"><input id="d3" class="digit" inputmode="numeric" maxlength="1" autocomplete="off"></div>
-          <div class="digit"><input id="d4" class="digit" inputmode="numeric" maxlength="1" autocomplete="off"></div>
-        </div>
-        <button id="sendBtn" class="send-btn" aria-label="Verify">SEND</button>
-      </div>
-
-      <div class="status" id="status">Enter code to continue</div>
-    </div>
+<div class="window">
+  <div class="toolbar">
+    <div class="btn">◁</div>
+    <div class="btn">×</div>
+    <div class="address">http://ourgirlfriendmaria.com/chat/</div>
   </div>
-
+  <div class="left">
+    <div class="thumb">LIVE CAM</div>
+  </div>
+  <div class="right" id="panel">
+    <div class="chatbox" id="chatbox">
+      <div class="msg them"><span class="who">MARIA:</span> These questions make me uncomfortable, Chris.</div>
+      <div class="msg you"><span class="who">YOU:</span> answer me</div>
+    </div>
+    <div class="entry">
+      <input id="d1" class="digit" maxlength="1">
+      <input id="d2" class="digit" maxlength="1">
+      <input id="d3" class="digit" maxlength="1">
+      <input id="d4" class="digit" maxlength="1">
+      <button id="sendBtn" class="send-btn">SEND</button>
+    </div>
+    <div class="status" id="status">Enter 4-digit code</div>
+  </div>
+</div>
 <script>
-/* ---------- behavior ---------- */
-/* Change this to whatever you want the valid code to be */
-const SECRET_CODE = '1337';
+const SECRET_CODE = "1337";
+const inputs = [...document.querySelectorAll(".digit")];
+const sendBtn = document.getElementById("sendBtn");
+const status = document.getElementById("status");
+const panel = document.getElementById("panel");
 
-(function(){
-  const inputs = Array.from(document.querySelectorAll('input.digit'));
-  const sendBtn = document.getElementById('sendBtn');
-  const status = document.getElementById('status');
-  const chatbox = document.getElementById('chatbox');
-  const rightPanel = document.querySelector('.right');
+function getCode(){ return inputs.map(i=>i.value).join(""); }
 
-  // initial focus
-  inputs[0].focus();
+function verify(){
+  const code = getCode();
+  if(code === SECRET_CODE){
+    status.textContent = "ACCESS GRANTED";
+    status.style.color = "green";
+  } else {
+    status.textContent = "INVALID CODE";
+    status.style.color = "red";
+    panel.classList.remove("glitch"); void panel.offsetWidth; panel.classList.add("glitch");
+    inputs.forEach(i=>i.value="");
+    inputs[0].focus();
+  }
+}
 
-  function getCode(){ return inputs.map(i=>i.value).join(''); }
-  function focusNext(i){ if(i < inputs.length - 1) inputs[i+1].focus(); }
-  function focusPrev(i){ if(i > 0) inputs[i-1].focus(); }
-
-  // input handling (digits, auto-advance, paste)
-  inputs.forEach((inp, idx) => {
-    inp.addEventListener('input', e => {
-      inp.value = inp.value.replace(/\D/g,'').slice(0,1);
-      if(inp.value) focusNext(idx);
-      status.textContent = '...';
-      status.style.color = '';
-      rightPanel.classList.remove('glitch');
-    });
-
-    inp.addEventListener('keydown', e => {
-      if(e.key === 'Backspace' && !inp.value){
-        e.preventDefault();
-        focusPrev(idx);
-        const prev = inputs[idx-1];
-        if(prev) prev.value = '';
-      }
-      if(e.key === 'ArrowLeft'){ e.preventDefault(); focusPrev(idx); }
-      if(e.key === 'ArrowRight'){ e.preventDefault(); focusNext(idx); }
-    });
-
-    inp.addEventListener('paste', e => {
-      e.preventDefault();
-      const txt = (e.clipboardData || window.clipboardData).getData('text') || '';
-      const digits = txt.replace(/\D/g,'').slice(0, inputs.length);
-      for(let i=0;i<digits.length;i++) inputs[i].value = digits[i];
-      const firstEmpty = inputs.findIndex(i => !i.value);
-      if(firstEmpty === -1) inputs[inputs.length-1].focus();
-      else inputs[firstEmpty].focus();
-    });
-
-    // block non-digit keypress
-    inp.addEventListener('keypress', e => {
-      if(!/\d/.test(e.key)) e.preventDefault();
-    });
+inputs.forEach((inp,i)=>{
+  inp.addEventListener("input",()=>{
+    inp.value = inp.value.replace(/\D/g,"").slice(0,1);
+    if(inp.value && i<inputs.length-1) inputs[i+1].focus();
   });
-
-  // perform the verification on SEND
-  function verify(){
-    const code = getCode();
-    if(code.length < inputs.length){
-      status.textContent = 'Enter all 4 digits.';
-      status.style.color = '#a11';
-      triggerGlitch();
-      return;
-    }
-
-    status.textContent = 'Verifying…';
-    status.style.color = '';
-    // dramatic delay
-    setTimeout(() => {
-      if(code === SECRET_CODE){
-        status.textContent = 'CODE ACCEPTED — ACCESS GRANTED';
-        status.style.color = '#900';
-        lockInputs();
-        appendChat('SYSTEM', 'Access granted. Welcome.');
-      } else {
-        status.textContent = 'INVALID CODE — TRY AGAIN';
-        status.style.color = '#b11';
-        triggerGlitch();
-        // clear boxes after small pause
-        setTimeout(()=> {
-          inputs.forEach(i=>i.value='');
-          inputs[0].focus();
-        }, 420);
-      }
-    }, 700);
-  }
-
-  function triggerGlitch(){
-    // add a quick shake / red highlight to the right panel (retro-glitch)
-    rightPanel.classList.remove('glitch');
-    void rightPanel.offsetWidth; // force reflow
-    rightPanel.classList.add('glitch');
-  }
-
-  function lockInputs(){
-    inputs.forEach(i => { i.readOnly = true; });
-  }
-
-  function appendChat(who, text){
-    const el = document.createElement('div');
-    el.className = 'msg them';
-    el.innerHTML = `<span class="who">${who}:</span> ${escapeHtml(text)}`;
-    chatbox.appendChild(el);
-    chatbox.scrollTop = chatbox.scrollHeight;
-  }
-
-  function escapeHtml(s){
-    return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  }
-
-  sendBtn.addEventListener('click', verify);
-  // enter on last input sends
-  inputs[inputs.length-1].addEventListener('keydown', e => {
-    if(e.key === 'Enter') verify();
-  });
-})();
+});
+sendBtn.addEventListener("click",verify);
+inputs[3].addEventListener("keydown",e=>{ if(e.key==="Enter") verify(); });
+inputs[0].focus();
 </script>
 </body>
 </html>
